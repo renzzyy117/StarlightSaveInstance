@@ -22,7 +22,7 @@ Reason: Many tools fail miserably at providing good user experience when it come
 
 > [!WARNING]
 > As stated under the Section 7 (b) in the LICENSE:
-> - You **MUST** always include the following Credit string: `UniversalSynSaveInstance https://discord.gg/wx4ThpAsmw`
+> - You **MUST** always include the following Credit string: `UniversalSynSaveInstance https://discord.gg/s74D6eAbVD`
 > - You are **NOT** allowed to claim authorship of the source code provided in this repository
 > - You **MUST** always include the following [License](https://github.com/renzzyy117/StarlightSaveInstance/blob/main/LICENSE)
 
@@ -54,8 +54,7 @@ The maintainers do not support or condone misuse of this software and are not re
 
 # DISCORD SERVER:<br />
 
-<https://discord.com/invite/wx4ThpAsmw> **/** <https://discord.gg/wx4ThpAsmw><br />
-[<img src="https://discordapp.com/api/guilds/1022465460517740654/widget.png?style=banner2" alt="Our Official Discord Server!"></img>](https://discord.com/invite/wx4ThpAsmw)<br />
+<https://discord.gg/s74D6eAbVD><br />
 
 # TO-DOs
 
