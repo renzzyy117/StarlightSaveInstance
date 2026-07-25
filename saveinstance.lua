@@ -2508,7 +2508,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local totalsize, chunks = 0, table.create(1)
 	local savebuffer, savebuffer_size = {}, 1
 	local header =
-		'<!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD --><roblox version="4">'
+		'<!-- Saved by StarlightSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD --><roblox version="4">'
 
 	local StatusText
 
@@ -2977,14 +2977,20 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		local mode = string.lower(OPTIONS.mode)
 		local tmp = table.clone(OPTIONS.ExtraInstances)
 
-		local PlaceName = game.PlaceId
+		local PlaceName = tostring(game.PlaceId)
 
 		pcall(function()
-			PlaceName = PlaceName .. " " .. service.MarketplaceService:GetProductInfoAsync(PlaceName).Name
+			PlaceName = service.MarketplaceService:GetProductInfoAsync(game.PlaceId).Name
 		end)
 
+		do -- * "{MapName} (With/Without script, With/Without terrain)" filename suffix
+			local ScriptInfo = OPTIONS.Decompile and "With script" or "Without script"
+			local TerrainInfo = TerrainSaveReady and "With terrain" or "Without terrain"
+			PlaceName = PlaceName .. " (" .. ScriptInfo .. ", " .. TerrainInfo .. ")"
+		end
+
 		local function sanitizeFileName(str)
-			return string.sub(string.gsub(string.gsub(string.gsub(str, "[^%w _]", ""), " +", " "), " +$", ""), 1, 240)
+			return string.sub(string.gsub(string.gsub(string.gsub(str, "[^%w _(),]", ""), " +", " "), " +$", ""), 1, 240)
 		end
 
 		if ToSaveInstance then
@@ -3016,7 +3022,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			placename =
 				sanitizeFileName("model " .. PlaceName .. " " .. (ToSaveInstance or tmp[1] or game):GetFullName())
 		else
-			placename = sanitizeFileName("place " .. PlaceName)
+			placename = sanitizeFileName(PlaceName)
 		end
 
 		if OPTIONS.AvoidFileOverwrite and isfile then
@@ -3034,7 +3040,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 
 		if GLOBAL_ENV[placename] then -- ? AvoidFileOverwrite kinda messes with this, but shouldn't be an issue
-			-- warn("UniversalSynSaveInstance is already saving to this file")
+			-- warn("StarlightSaveInstance is already saving to this file")
 			return
 		end
 
@@ -3915,7 +3921,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 													end
 												end
 
-												value = "-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD\n\n"
+												value = "-- Saved by StarlightSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD\n\n"
 													.. (hasLinkedSource and "-- Original Source: https://assetdelivery.roblox.com/v1/asset/?" .. (LinkedSource_type or "id") .. "=" .. (LinkedSource or LinkedSource_Url) .. "\n\n" or "")
 													.. value
 											end
@@ -4120,7 +4126,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						RecoveredScripts
 					) .. "\n" or "")
 					.. [[
-		Thank you for using UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD.
+		Thank you for using StarlightSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD.
 
 		If you didn't save in Binary (rbxl) - it's recommended to save the game right away to take advantage of the binary format & to preserve values of certain properties if you used IgnoreDefaultProperties setting (as they might change in the future).
 		You can do that by going to FILE -> Save to File As -> Make sure File Name ends with .rbxl -> Save
@@ -4194,7 +4200,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 
 		savebuffer[savebuffer_size] =
-			"</roblox><!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD -->"
+			"</roblox><!-- Saved by StarlightSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD -->"
 		savebuffer_size = savebuffer_size + 1
 		save_cache()
 		do
