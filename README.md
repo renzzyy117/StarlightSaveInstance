@@ -71,7 +71,7 @@ Reason: Many tools fail miserably at providing good user experience when it come
 
 > [!WARNING]
 > As stated under the Section 7 (b) in the LICENSE:
-> - You **MUST** always include the following Credit string: `UniversalSynSaveInstance https://discord.gg/s74D6eAbVD`
+> - You **MUST** always include the following Credit string: `StarlightSaveInstance https://discord.gg/s74D6eAbVD`
 > - You are **NOT** allowed to claim authorship of the source code provided in this repository
 > - You **MUST** always include the following [License](https://github.com/renzzyy117/StarlightSaveInstance/blob/main/LICENSE)
 
