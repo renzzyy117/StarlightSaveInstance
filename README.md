@@ -15,6 +15,55 @@ local Options = {} -- Documentation here https://github.com/renzzyy117/Starlight
 synsaveinstance(Options)
 ```
 
+# Contoh Konfigurasi (Script & Terrain)
+
+> [!NOTE]
+> `noscripts = true` menonaktifkan proses decompile (Source Script akan berisi `-- Decompiling is disabled`, Instance Script-nya tetap tersimpan, hanya isinya yang tidak di-decompile). `SaveTerrain` mengatur apakah data voxel Terrain (SmoothGrid/PhysicsGrid) ikut disave.
+
+**1. Without Script, Without Terrain**
+```lua
+local Options = {
+	SafeMode = true,
+	Timeout = 10,
+	noscripts = true,       -- Skip decompile, Source Script tidak disimpan
+	SaveTerrain = false,    -- Terrain tidak disave
+}
+synsaveinstance(Options)
+```
+
+**2. Without Script, With Terrain**
+```lua
+local Options = {
+	SafeMode = true,
+	Timeout = 10,
+	noscripts = true,       -- Skip decompile, Source Script tidak disimpan
+	SaveTerrain = true,     -- Terrain ikut disave
+}
+synsaveinstance(Options)
+```
+
+**3. With Script, Without Terrain**
+```lua
+local Options = {
+	SafeMode = true,
+	Timeout = 10,
+	noscripts = false,      -- Script di-decompile & disimpan
+	SaveTerrain = false,    -- Terrain tidak disave
+}
+synsaveinstance(Options)
+```
+
+**4. With Script, With Terrain**
+```lua
+local Options = {
+	SafeMode = true,
+	Timeout = 10,
+	noscripts = false,      -- Script di-decompile & disimpan
+	SaveTerrain = true,     -- Terrain ikut disave
+}
+synsaveinstance(Options)
+```
+
 # Universal Syn Save Instance
 
 Or shortly USSI, a project aimed at resurrecting saveinstance function from Synapse X.<br />
