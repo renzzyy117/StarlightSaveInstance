@@ -7,11 +7,11 @@
 
 ```lua
 local Params = {
- RepoURL = "https://raw.githubusercontent.com/luau/UniversalSynSaveInstance/main/",
+ RepoURL = "https://raw.githubusercontent.com/renzzyy117/StarlightSaveInstance/main/",
  SSI = "saveinstance",
 }
 local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
-local Options = {} -- Documentation here https://luau.github.io/UniversalSynSaveInstance/api/SynSaveInstance
+local Options = {} -- Documentation here https://github.com/renzzyy117/StarlightSaveInstance
 synsaveinstance(Options)
 ```
 
@@ -24,7 +24,7 @@ Reason: Many tools fail miserably at providing good user experience when it come
 > As stated under the Section 7 (b) in the LICENSE:
 > - You **MUST** always include the following Credit string: `UniversalSynSaveInstance https://discord.gg/wx4ThpAsmw`
 > - You are **NOT** allowed to claim authorship of the source code provided in this repository
-> - You **MUST** always include the following [License](https://github.com/luau/UniversalSynSaveInstance/blob/main/LICENSE)
+> - You **MUST** always include the following [License](https://github.com/renzzyy117/StarlightSaveInstance/blob/main/LICENSE)
 
 ## Disclaimer
 
@@ -124,7 +124,7 @@ resources include:
 
 \*\*\* View source code of this file for more credits
 
-[Documentation]: https://luau.github.io/UniversalSynSaveInstance/api/SynSaveInstance
+[Documentation]: https://github.com/renzzyy117/StarlightSaveInstance
 [@Acrillis]: https://github.com/Acrillis
 [@Anaminus]: https://github.com/Anaminus
 [@Dekkonot]: https://github.com/Dekkonot
