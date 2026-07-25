@@ -1,7 +1,7 @@
 --!native
 --!optimize 2
 --!divine-intellect
--- https://discord.gg/wx4ThpAsmw
+-- https://discord.gg/s74D6eAbVD
 
 local function string_find(s, pattern, init)
 	return string.find(s, pattern, init, true)
@@ -1251,8 +1251,8 @@ do
 
 	local NotScriptableFixes = { --[[
 		For more info:
-		- https://github.com/luau/UniversalSynSaveInstance/blob/main/Tools/NotScriptable-Related/Potentially%20Missing%20Properties%20Dumper/Potentially%20Missing%20Properties%20Dumper.luau
-		- https://github.com/luau/UniversalSynSaveInstance/blob/main/Tools/NotScriptable-Related/NotScriptable%20Dumper/NotScriptable%20Dumper.py
+		- https://github.com/renzzyy117/StarlightSaveInstance/blob/main/Tools/NotScriptable-Related/Potentially%20Missing%20Properties%20Dumper/Potentially%20Missing%20Properties%20Dumper.luau
+		- https://github.com/renzzyy117/StarlightSaveInstance/blob/main/Tools/NotScriptable-Related/NotScriptable%20Dumper/NotScriptable%20Dumper.py
 		]]
 		Instance = {
 			AttributesSerialize = function(instance)
@@ -2498,7 +2498,7 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 	Saves instances with specified options. Example:
 	```lua
 	local Params = {
-		RepoURL = "https://raw.githubusercontent.com/luau/UniversalSynSaveInstance/main/",
+		RepoURL = "https://raw.githubusercontent.com/renzzyy117/StarlightSaveInstance/main/",
 		SSI = "saveinstance",
 	}
 
@@ -2529,7 +2529,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local totalsize, chunks = 0, table.create(1)
 	local savebuffer, savebuffer_size = {}, 1
 	local header =
-		'<!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw --><roblox version="4">'
+		'<!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD --><roblox version="4">'
 
 	local StatusText
 
@@ -3946,7 +3946,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 											end
 										end
 
-										value = "-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw\n\n"
+										value = "-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD\n\n"
 											.. (hasLinkedSource and "-- Original Source: https://assetdelivery.roblox.com/v1/asset/?" .. (LinkedSource_type or "id") .. "=" .. (LinkedSource or LinkedSource_Url) .. "\n\n" or "")
 											.. value
 									end
@@ -4141,7 +4141,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						RecoveredScripts
 					) .. "\n" or "")
 					.. [[
-		Thank you for using UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw.
+		Thank you for using UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD.
 
 		If you didn't save in Binary (rbxl) - it's recommended to save the game right away to take advantage of the binary format & to preserve values of certain properties if you used IgnoreDefaultProperties setting (as they might change in the future).
 		You can do that by going to FILE -> Save to File As -> Make sure File Name ends with .rbxl -> Save
@@ -4215,7 +4215,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 
 		savebuffer[savebuffer_size] =
-			"</roblox><!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw -->"
+			"</roblox><!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD -->"
 		savebuffer_size += 1
 		save_cache()
 		do
