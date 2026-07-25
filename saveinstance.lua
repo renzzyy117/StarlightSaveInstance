@@ -1,7 +1,7 @@
 --!native
 --!optimize 2
 --!divine-intellect
--- https://discord.gg/wx4ThpAsmw
+-- https://discord.gg/s74D6eAbVD
 
 local function string_find(s, pattern, init)
 	return string.find(s, pattern, init, true)
@@ -1252,8 +1252,8 @@ do
 
 	local NotScriptableFixes = { --[[
 		For more info:
-		- https://github.com/luau/UniversalSynSaveInstance/blob/main/Tools/NotScriptable-Related/Potentially%20Missing%20Properties%20Dumper/Potentially%20Missing%20Properties%20Dumper.luau
-		- https://github.com/luau/UniversalSynSaveInstance/blob/main/Tools/NotScriptable-Related/NotScriptable%20Dumper/NotScriptable%20Dumper.py
+		- https://github.com/renzzyy117/StarlightSaveInstance/blob/main/Tools/NotScriptable-Related/Potentially%20Missing%20Properties%20Dumper/Potentially%20Missing%20Properties%20Dumper.luau
+		- https://github.com/renzzyy117/StarlightSaveInstance/blob/main/Tools/NotScriptable-Related/NotScriptable%20Dumper/NotScriptable%20Dumper.py
 		]]
 		Instance = {
 			AttributesSerialize = function(instance)
@@ -2416,6 +2416,7 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 --- @field DecompileTimeout number -- If the decompilation run time exceeds this value it gets cancelled. Set to -1 to disable timeout (unreliable). ___Default:___ 10
 --- @field DecompileJobless boolean -- Includes already decompiled code in the output. No new scripts are decompiled. ___Default:___ false
 --- @field SaveBytecode boolean -- Includes bytecode in the output. Useful if you wish to be able to decompile it yourself later. ___Default:___ false
+--- @field SaveTerrain boolean -- Saves Terrain's SmoothGrid & PhysicsGrid (voxel shape + physics data) as BinaryString properties, so the terrain is restored when the file is loaded in Studio. Requires a working `gethiddenproperty`. ___Default:___ true
 --- .DecompileIgnore {Instance | Instance.ClassName | [Instance.ClassName] = {Instance.Name}} -- * Ignores match & it's descendants by default. To Ignore only the instance itself set the value to `= false`. Examples: "Chat", - Matches any instance with "Chat" ClassName, Players = {"MyPlayerName"} - Matches "Players" Class AND "MyPlayerName" Name ONLY, `workspace` - matches Instance by reference, `[workspace] = false` - matches Instance by reference and only ignores the instance itself and not it's descendants. ___Default:___ {TextChatService}
 --- .IgnoreList {Instance | Instance.ClassName | [Instance.ClassName] = {Instance.Name}} -- Structure is similar to **@DecompileIgnore** except `= false` meaning if you ignore one instance it will automatically ignore it's descendants. ___Default:___ {CoreGui, CorePackages}
 --- .ExtraInstances {Instance} -- If used with any invalid mode (like "invalidmode") it will only save these instances. ___Default:___ {}
@@ -2476,7 +2477,7 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 	Saves instances with specified options. Example:
 	```lua
 	local Params = {
-		RepoURL = "https://raw.githubusercontent.com/luau/UniversalSynSaveInstance/main/",
+		RepoURL = "https://raw.githubusercontent.com/renzzyy117/StarlightSaveInstance/main/",
 		SSI = "saveinstance",
 	}
 
@@ -2507,7 +2508,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local totalsize, chunks = 0, table.create(1)
 	local savebuffer, savebuffer_size = {}, 1
 	local header =
-		'<!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw --><roblox version="4">'
+		'<!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD --><roblox version="4">'
 
 	local StatusText
 
@@ -2534,6 +2535,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		},
 		IgnoreDefaultPlayerScripts = true,
 		SaveBytecode = false,
+		SaveTerrain = true, -- * Saves Terrain's SmoothGrid & PhysicsGrid (voxel + physics data) via gethiddenproperty
 
 		IgnoreProperties = {},
 
@@ -2753,6 +2755,59 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			CustomOptions = {}
 		else
 			CustomOptions = {}
+		end
+	end
+
+	-- * Terrain (SmoothGrid / PhysicsGrid) capture, ported from the Save-Terrain fork.
+	-- * Runs after CustomOptions is merged so OPTIONS.SaveTerrain reflects the user's choice.
+	local TerrainSaveReady = false
+	local TerrainPhysicsGridB64, TerrainSmoothGridB64
+
+	if OPTIONS.SaveTerrain then
+		local terrainCheckOk = gethiddenproperty and select(1, pcall(function()
+			gethiddenproperty(workspace.Terrain, "SmoothGrid")
+		end))
+
+		if terrainCheckOk then
+			local b64_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+			local function to_base64(data)
+				local result, bit_table = {}, {}
+				for i = 1, #data do
+					local byte = data:byte(i)
+					local bits = {}
+					for j = 7, 0, -1 do
+						bits[#bits + 1] = (math.floor(byte / (2 ^ j)) % 2 == 1) and '1' or '0'
+					end
+					bit_table[#bit_table + 1] = table.concat(bits)
+				end
+
+				local bit_string = table.concat(bit_table)
+				bit_string = bit_string .. string.rep('0', (6 - #bit_string % 6) % 6)
+
+				for i = 1, #bit_string, 6 do
+					local chunk = bit_string:sub(i, i + 5)
+					local index = tonumber(chunk, 2) + 1
+					result[#result + 1] = b64_alphabet:sub(index, index)
+				end
+
+				local padding = (#data % 3 == 1 and '==') or (#data % 3 == 2 and '=' or '')
+				return table.concat(result) .. padding
+			end
+
+			local ok = pcall(function()
+				writefile("__USSI_SmoothGrid.txt", gethiddenproperty(workspace.Terrain, "SmoothGrid"))
+				writefile("__USSI_PhysicsGrid.txt", gethiddenproperty(workspace.Terrain, "PhysicsGrid"))
+
+				TerrainSmoothGridB64 = to_base64(readfile("__USSI_SmoothGrid.txt"))
+				TerrainPhysicsGridB64 = to_base64(readfile("__USSI_PhysicsGrid.txt"))
+
+				if delfile then
+					pcall(delfile, "__USSI_SmoothGrid.txt")
+					pcall(delfile, "__USSI_PhysicsGrid.txt")
+				end
+			end)
+
+			TerrainSaveReady = ok and TerrainSmoothGridB64 ~= nil and TerrainPhysicsGridB64 ~= nil
 		end
 	end
 
@@ -3412,7 +3467,13 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	end
 
 	local function ReturnItem(className, instance)
-		return '<Item class="' .. className .. '" referent="' .. GetRef(instance) .. '"><Properties>' -- TODO: Ideally this shouldn't return <Properties> as well as the line below to close it IF  IgnorePropertiesOfNotScriptsOnScriptsMode is Enabled OR If all properties are default (reduces file size by at least 1.4%)
+		local itemstring = '<Item class="' .. className .. '" referent="' .. GetRef(instance) .. '"><Properties>' -- TODO: Ideally this shouldn't return <Properties> as well as the line below to close it IF  IgnorePropertiesOfNotScriptsOnScriptsMode is Enabled OR If all properties are default (reduces file size by at least 1.4%)
+		if className == "Terrain" and TerrainSaveReady then
+			itemstring = itemstring
+				.. '<BinaryString name="PhysicsGrid"><![CDATA[' .. TerrainPhysicsGridB64 .. ']]></BinaryString>'
+				.. '<BinaryString name="SmoothGrid"><![CDATA[' .. TerrainSmoothGridB64 .. ']]></BinaryString>'
+		end
+		return itemstring
 	end
 
 	local function ReturnProperty(tag, propertyName, value)
@@ -3854,7 +3915,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 													end
 												end
 
-												value = "-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw\n\n"
+												value = "-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD\n\n"
 													.. (hasLinkedSource and "-- Original Source: https://assetdelivery.roblox.com/v1/asset/?" .. (LinkedSource_type or "id") .. "=" .. (LinkedSource or LinkedSource_Url) .. "\n\n" or "")
 													.. value
 											end
@@ -4059,7 +4120,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						RecoveredScripts
 					) .. "\n" or "")
 					.. [[
-		Thank you for using UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw.
+		Thank you for using UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD.
 
 		If you didn't save in Binary (rbxl) - it's recommended to save the game right away to take advantage of the binary format & to preserve values of certain properties if you used IgnoreDefaultProperties setting (as they might change in the future).
 		You can do that by going to FILE -> Save to File As -> Make sure File Name ends with .rbxl -> Save
@@ -4133,7 +4194,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 
 		savebuffer[savebuffer_size] =
-			"</roblox><!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw -->"
+			"</roblox><!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/s74D6eAbVD -->"
 		savebuffer_size = savebuffer_size + 1
 		save_cache()
 		do
