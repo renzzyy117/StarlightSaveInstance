@@ -154,10 +154,10 @@ The maintainers do not support or condone misuse of this software and are not re
 
 # Acknowledgments
 > [!IMPORTANT]
-> This document is based largely on the efforts of [@Anaminus] & [@Dekkonot], authors of the [Roblox Format Specifications]. Additional
+> This document is based largely on the efforts of [@rreenndy] & [@kiallyyyy], authors of the [Roblox Format Specifications]. Additional
 resources include:
 > 
-> - [Syngp Synapse X Source code 2019][Synapse X Source 2019] for base saveinstance code (extended by [@mblouka] & [@Acrillis])
+> - [Syngp Synapse X Source code 2019][Synapse X Source 2019] for base saveinstance code (extended by [@rreenndy] & [@kiallyyyy])
 > - [Moon/LorekeeperZinnia][@LorekeeperZinnia] for being the original creator of saveinstance that was used in Synapse X, Elysian and many others. As well as being an inspiration for this project.
 > - [Rojo Rbx Dom Xml] for being a fallback documentation in case something wasn't clear in the [Roblox Format Specifications]
 > - [Roblox File Format] for a list of redirects of old/deprecated xml properties that still use the old tag values
@@ -166,10 +166,8 @@ resources include:
 \*\*\* View source code of this file for more credits
 
 [Documentation]: https://github.com/renzzyy117/StarlightSaveInstance
-[@Acrillis]: https://github.com/Acrillis
-[@Anaminus]: https://github.com/Anaminus
-[@Dekkonot]: https://github.com/Dekkonot
-[@mblouka]: https://github.com/mblouka
+[@rreenndy]: https://discord.com/users/1391630426166267925
+[@kiallyyyy]: https://discord.com/users/1481600333510607018
 [@LorekeeperZinnia]: https://github.com/LorekeeperZinnia
 [bit32]: https://create.roblox.com/docs/reference/engine/libraries/bit32
 [buffer]: https://create.roblox.com/docs/reference/engine/libraries/buffer
