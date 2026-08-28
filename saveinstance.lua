@@ -3265,54 +3265,6 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 	end
 
-	local function isUsableLuaSource(src)
-		return type(src) == "string" and src ~= "" and not string.find(src, "\0", 1, true)
-	end
-
-	-- Proven original source only (property / hidden property / executor API). Never inferred names.
-	local function tryReadScriptSource(scriptInstance)
-		local ok, src = pcall(index, scriptInstance, "Source")
-		if ok and isUsableLuaSource(src) then
-			return src
-		end
-
-		if gethiddenproperty then
-			ok, src = pcall(gethiddenproperty, scriptInstance, "Source")
-			if ok and isUsableLuaSource(src) then
-				return src
-			end
-		end
-
-		if type(getscriptsource) == "function" then
-			ok, src = pcall(getscriptsource, scriptInstance)
-			if ok and isUsableLuaSource(src) then
-				return src
-			end
-		end
-	end
-
-	local function isUnderServerOnlyService(instance)
-		local current = instance.Parent
-		while current do
-			if current:IsA("ServerScriptService") or current:IsA("ServerStorage") then
-				return true
-			end
-			current = current.Parent
-		end
-		return false
-	end
-
-	local function hasAvailableScriptData(instance)
-		if tryReadScriptSource(instance) then
-			return true
-		end
-		if getbytecode then
-			local ok, bytecode = getbytecode(instance)
-			return ok and type(bytecode) == "string" and bytecode ~= ""
-		end
-		return type(decompile) == "function"
-	end
-
 	do
 		if not OPTIONS.Decompile then
 			ldecompile = function()
@@ -3322,11 +3274,6 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			local decomp = construct_TimeoutHandler(DecompileTimeout, decompile, "Decompiler timed out")
 
 			ldecompile = function(script)
-				local originalSource = tryReadScriptSource(script)
-				if originalSource then
-					return originalSource
-				end
-
 				-- local name = scr.ClassName .. scr.Name
 				local bytecode
 				if ScriptCache then
@@ -3380,11 +3327,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 				return output
 			end
 		else
-			ldecompile = function(script)
-				local originalSource = tryReadScriptSource(script)
-				if originalSource then
-					return originalSource
-				end
+			ldecompile = function()
 				return "-- Your Executor does NOT have a Decompiler"
 			end
 		end
@@ -3958,21 +3901,13 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 												if should_decompile then
 													local isLocalScript = instance:IsA("LocalScript")
-													-- ClassName, not IsA("Script"): LocalScript inherits Script; ModuleScript does not
-													local isPlainScript = instance.ClassName == "Script"
-													local skipUnreadableServerScript = false
-
-													if isLocalScript and instance.RunContext == Enum.RunContext.Server then
-														skipUnreadableServerScript = true
-													elseif isPlainScript and instance.RunContext ~= Enum.RunContext.Client then
-														if isUnderServerOnlyService(instance) then
-															skipUnreadableServerScript = true
-														elseif not hasAvailableScriptData(instance) then
-															skipUnreadableServerScript = true
-														end
-													end
-
-													if skipUnreadableServerScript then
+													if
+														isLocalScript
+															and instance.RunContext == Enum.RunContext.Server
+														or not isLocalScript
+															and instance:IsA("Script")
+															and instance.RunContext ~= Enum.RunContext.Client
+													then
 														value =
 															"-- [FilteringEnabled] Server Scripts are IMPOSSIBLE to save" -- TODO: Could be not just server scripts in the future
 													else
