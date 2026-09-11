@@ -3087,6 +3087,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			ModuleScript = nil,
 		},
 		IgnoreDefaultPlayerScripts = true,
+		SaveTerrain = true,
 		SaveBytecode = false,
 
 		IgnoreProperties = {},
@@ -3482,7 +3483,12 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			PlaceName = PlaceName .. " " .. service.MarketplaceService:GetProductInfoAsync(PlaceName).Name
 		end)
 
-		PlaceName = PlaceName .. " (" .. (OPTIONS.Decompile and "With script" or "Without script") .. ")"
+		PlaceName = PlaceName
+			.. " ( "
+			.. (OPTIONS.Decompile and "With script" or "Without script")
+			.. ", "
+			.. (OPTIONS.SaveTerrain and "with terrain" or "without terrain")
+			.. " )"
 
 		local function sanitizeFileName(str)
 			return string.sub(string.gsub(string.gsub(string.gsub(str, "[^%w _]", ""), " +", " "), " +$", ""), 1, 240)

@@ -3690,6 +3690,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			ModuleScript = nil,
 		},
 		IgnoreDefaultPlayerScripts = true,
+		SaveTerrain = true,
 
 		IgnoreProperties = {},
 
@@ -4126,7 +4127,11 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			PlaceName ..= " " .. service.MarketplaceService:GetProductInfoAsync(PlaceName).Name
 		end)
 
-		PlaceName ..= " (" .. (OPTIONS.Decompile and "With script" or "Without script") .. ")"
+		PlaceName ..= " ( "
+			.. (OPTIONS.Decompile and "With script" or "Without script")
+			.. ", "
+			.. (OPTIONS.SaveTerrain and "with terrain" or "without terrain")
+			.. " )"
 
 		if Object then
 			if mode == "optimized" then -- ! NOT supported with Model file mode
