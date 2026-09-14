@@ -3477,21 +3477,21 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		local mode = string.lower(OPTIONS.mode)
 		local tmp = table.clone(OPTIONS.ExtraInstances)
 
-		local PlaceName = game.PlaceId
+		local PlaceName = game.Name
 
 		pcall(function()
-			PlaceName = PlaceName .. " " .. service.MarketplaceService:GetProductInfoAsync(PlaceName).Name
+			PlaceName = service.MarketplaceService:GetProductInfoAsync(game.PlaceId).Name
 		end)
 
 		PlaceName = PlaceName
 			.. " ( "
 			.. (OPTIONS.Decompile and "With script" or "Without script")
 			.. ", "
-			.. (OPTIONS.SaveTerrain and "with terrain" or "without terrain")
+			.. (OPTIONS.SaveTerrain and "With terrain" or "Without terrain")
 			.. " )"
 
 		local function sanitizeFileName(str)
-			return string.sub(string.gsub(string.gsub(string.gsub(str, "[^%w _]", ""), " +", " "), " +$", ""), 1, 240)
+			return string.sub(string.gsub(string.gsub(string.gsub(str, "[^%w _(),]", ""), " +", " "), " +$", ""), 1, 240)
 		end
 
 		if ToSaveInstance then
@@ -3524,7 +3524,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			placename =
 				sanitizeFileName("model " .. PlaceName .. " " .. (ToSaveInstance or tmp[1] or game):GetFullName())
 		else
-			placename = sanitizeFileName("place " .. PlaceName)
+			placename = sanitizeFileName(PlaceName)
 		end
 
 		if FilePath then
